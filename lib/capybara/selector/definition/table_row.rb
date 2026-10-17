@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
+Capybara.add_selector(:table_row, locator_type: [Array, Hash, Integer]) do
   xpath do |locator, headers: false, **|
     cell_type = XPath::Expression.new(:literal, headers ? :th : :td)
     cell_type = cell_type.or(:td) if headers == true
@@ -19,6 +19,8 @@ Capybara.add_selector(:table_row, locator_type: [Array, Hash]) do
       tds = locator.reverse.map { |cell| XPath.following_sibling(cell_type)[XPath.string.n.is(cell)] }
                            .reduce { |xp, cell| cell.where(xp) }
       xpath[initial_td[tds]]
+    elsif locator.is_a? Integer
+      xpath.where(cell_type)[locator]
     else
       xpath.where(cell_type)
     end

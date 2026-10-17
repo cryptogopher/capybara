@@ -132,6 +132,11 @@ Capybara::SpecHelper.spec '#has_table?' do
     expect(@session.find(:table, 'Horizontal Headers')).not_to have_selector(:table_row, %w[Other])
   end
 
+  it 'should find row by row number' do
+    expect(@session.find(:table, 'Horizontal Headers')).to have_selector(:table_row, 5)
+    expect(@session.find(:table, 'Horizontal Headers')).not_to have_selector(:table_row, 6)
+  end
+
   it 'should find row by all rows without locator values' do
     table = @session.find(:table, 'Horizontal Headers')
 
